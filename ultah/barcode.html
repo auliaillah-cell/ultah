@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>✨ Happy Birthday & Love ✨ - Ulang Tahun Cinta Imut</title>
+    <!-- Google Fonts untuk font lucu & gemoy -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 (Ikon imut) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Canvas Confetti (untuk efek meriah) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none; /* biar gak kesorot teksnya, lebih lucu */
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          145deg,
+          #ffe6f0 0%,
+          #ffccdd 40%,
+          #ffe0b5 100%
+        );
+        overflow-x: hidden;
+        position: relative;
+        cursor:
+          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="27" viewBox="0 0 24 27"><path fill="hotpink" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>')
+            12 24,
+          auto;
+      }
+
+      /* ----- Floating Hearts (Background Animasi Hati Lucu) ----- */
+      .hearts-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .heart-float {
+        position: absolute;
+        font-size: 1.2rem;
+        opacity: 0.7;
+        animation: floatHeart linear infinite;
+        color: #ff4d6d;
+        text-shadow: 0 0 3px #fff9c4;
+        z-index: 1;
+      }
+
+      @keyframes floatHeart {
+        0% {
+          transform: translateY(100vh) scale(0.3) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.9;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(-20vh) scale(1.2) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* ----- Balon Udara Imut (Floating & Sway) ----- */
+      .balloon {
+        position: fixed;
+        pointer-events: none;
+        z-index: 2;
+        animation: swayBalloon 4s ease-in-out infinite;
+        filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.15));
+      }
+
+      .balloon-body {
+        width: 70px;
+        height: 85px;
+        background: radial-gradient(circle at 30% 30%, #ffb3c6, #ff6f91);
+        border-radius: 50%;
+        position: relative;
+        box-shadow:
+          inset -5px -5px 0 rgba(0, 0, 0, 0.05),
+          0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+      .balloon-body::before {
+        content: "🎈";
+        position: absolute;
+        font-size: 2rem;
+        bottom: -15px;
+        left: 20px;
+        opacity: 0.7;
+      }
+      .balloon-tail {
+        width: 2px;
+        height: 35px;
+        background: #a55d35;
+        position: absolute;
+        bottom: -30px;
+        left: 34px;
+      }
+      .balloon-string {
+        width: 1.5px;
+        height: 45px;
+        background: #876b52;
+        position: absolute;
+        bottom: -65px;
+        left: 34px;
+        transform-origin: top;
+        animation: stringWave 1.5s infinite alternate;
+      }
+      @keyframes swayBalloon {
+        0% {
+          transform: translateX(0px) translateY(0px);
+        }
+        50% {
+          transform: translateX(8px) translateY(-6px);
+        }
+        100% {
+          transform: translateX(-5px) translateY(3px);
+        }
+      }
+      @keyframes stringWave {
+        0% {
+          transform: rotate(-3deg);
+        }
+        100% {
+          transform: rotate(3deg);
+        }
+      }
+      /* Warna balon berbeda */
+      .balloon1 .balloon-body {
+        background: radial-gradient(circle at 30% 30%, #ffb3ba, #ff6f61);
+      }
+      .balloon2 .balloon-body {
+        background: radial-gradient(circle at 30% 30%, #b5ead7, #77dd77);
+      }
+      .balloon3 .balloon-body {
+        background: radial-gradient(circle at 30% 30%, #ffd6a5, #ffb347);
+      }
+
+      /* --- Konten Utama (di atas segalanya) --- */
+      .content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 20px 20px 40px;
+        backdrop-filter: brightness(1.02);
+      }
+
+      /* Kartu Ucapan */
+      .card {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(5px);
+        border-radius: 80px 80px 70px 70px;
+        padding: 30px 25px 40px;
+        max-width: 550px;
+        width: 90%;
+        box-shadow:
+          0 25px 40px rgba(255, 105, 180, 0.3),
+          0 10px 20px rgba(0, 0, 0, 0.1);
+        border: 3px solid white;
+        transition: transform 0.3s ease;
+        margin-bottom: 30px;
+      }
+      .card:hover {
+        transform: scale(1.01);
+      }
+
+      h1 {
+        font-size: 2.6rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ff477e, #ff9f4a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 4px 4px 12px rgba(255, 200, 200, 0.6);
+        letter-spacing: -0.5px;
+        margin-bottom: 15px;
+      }
+
+      .love-icon {
+        font-size: 3rem;
+        display: inline-block;
+        animation: heartbeat 1.2s infinite ease-in-out;
+        margin: 0 10px;
+      }
+
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+          color: #ff2e6b;
+        }
+      }
+
+      .birthday-message {
+        font-size: 1.3rem;
+        font-weight: 600;
+        background: #fff0f5cc;
+        padding: 10px 20px;
+        border-radius: 50px;
+        display: inline-block;
+        margin: 15px auto;
+        color: #c43e6e;
+        backdrop-filter: blur(2px);
+      }
+
+      .cute-text {
+        font-size: 1rem;
+        color: #b34167;
+        background: #ffeeee;
+        padding: 8px 18px;
+        border-radius: 40px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      /* ------- KUE ULANG TAHUN CSS ------- */
+      .cake-container {
+        margin: 25px 0 15px;
+        display: flex;
+        justify-content: center;
+        position: relative;
+      }
+      .cake {
+        position: relative;
+        width: 220px;
+        filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.2));
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .cake:hover {
+        transform: scale(1.02);
+      }
+      .plate {
+        width: 240px;
+        height: 20px;
+        background: #edd6b0;
+        border-radius: 50%;
+        position: absolute;
+        bottom: -18px;
+        left: -10px;
+        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+      }
+      .layer-bottom {
+        width: 200px;
+        height: 50px;
+        background: #e0ac69;
+        border-radius: 15px 15px 5px 5px;
+        position: relative;
+        margin: 0 auto;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.05);
+      }
+      .layer-middle {
+        width: 180px;
+        height: 45px;
+        background: #f0bc7e;
+        border-radius: 15px 15px 5px 5px;
+        margin: -8px auto 0;
+        position: relative;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
+      }
+      .layer-top {
+        width: 160px;
+        height: 45px;
+        background: #f8cb94;
+        border-radius: 15px 15px 8px 8px;
+        margin: -8px auto 0;
+        position: relative;
+      }
+      .frosting {
+        background: #ffb7c5;
+        height: 18px;
+        width: 100%;
+        border-radius: 30px;
+        position: relative;
+        top: -8px;
+        box-shadow: 0 2px 3px #ff8da1;
+      }
+      .candle {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 38px;
+        background: linear-gradient(90deg, #fdd0f2, #f7a1c4);
+        border-radius: 5px 5px 3px 3px;
+        box-shadow: 0 0 0 1px #ffc0e0;
+      }
+      .flame {
+        position: absolute;
+        top: -22px;
+        left: 1px;
+        width: 10px;
+        height: 20px;
+        background: radial-gradient(ellipse, #ffdd77, #ff9900);
+        border-radius: 80% 20% 70% 30%;
+        animation: flicker 0.3s infinite alternate;
+        transform-origin: bottom;
+        box-shadow: 0 0 8px #ffb347;
+      }
+      @keyframes flicker {
+        0% {
+          transform: scale(1) translateY(0px);
+          opacity: 0.9;
+          background: #ffcc44;
+        }
+        100% {
+          transform: scale(1.1) translateY(-3px);
+          opacity: 1;
+          background: #ff9f2e;
+        }
+      }
+      .glow {
+        position: absolute;
+        top: -28px;
+        left: -4px;
+        width: 20px;
+        height: 28px;
+        background: radial-gradient(circle, #ffdd99, transparent);
+        border-radius: 50%;
+        filter: blur(5px);
+        opacity: 0.7;
+        animation: pulseGlow 0.8s infinite alternate;
+      }
+      @keyframes pulseGlow {
+        0% {
+          opacity: 0.4;
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 0.9;
+          transform: scale(1.1);
+        }
+      }
+
+      /* Tombol kejutan */
+      .surprise-btn {
+        background: linear-gradient(95deg, #ff859a, #ff4d6d);
+        border: none;
+        color: white;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 60px;
+        font-family: "Quicksand", sans-serif;
+        margin: 20px 0 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 5px 0 #aa2e4e;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .surprise-btn:active {
+        transform: translateY(3px);
+        box-shadow: 0 2px 0 #aa2e4e;
+      }
+      .surprise-btn i {
+        font-size: 1.5rem;
+        animation: bounceHeart 0.8s infinite;
+      }
+      @keyframes bounceHeart {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+
+      /* Love Stamp & Pemanis */
+      .love-stamp {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+      }
+      .stamp {
+        background: #ffe2f0;
+        border-radius: 30px;
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #c0395b;
+        box-shadow: 0 3px 8px #fbc4d0;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+        }
+        .card {
+          padding: 20px;
+        }
+        .cake {
+          transform: scale(0.9);
+        }
+        .balloon {
+          transform: scale(0.75);
+        }
+        .love-icon {
+          font-size: 2rem;
+        }
+        .surprise-btn {
+          font-size: 1rem;
+          padding: 8px 18px;
+        }
+      }
+
+      /* Animasi ekstra */
+      .wiggle {
+        animation: wiggle 0.3s ease;
+      }
+      @keyframes wiggle {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(5deg);
+        }
+        75% {
+          transform: rotate(-5deg);
+        }
+      }
+      footer {
+        font-size: 0.75rem;
+        margin-top: 20px;
+        color: #d97794;
+        background: #fff0f0b3;
+        padding: 6px 15px;
+        border-radius: 30px;
+        backdrop-filter: blur(2px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Hati Mengambang (Generated by JS) -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Balon Udara Imut Menari -->
+    <div class="balloon balloon1" style="top: 10%; left: 5%">
+      <div class="balloon-body"></div>
+      <div class="balloon-tail"></div>
+      <div class="balloon-string"></div>
+    </div>
+    <div class="balloon balloon2" style="top: 65%; right: 3%">
+      <div class="balloon-body"></div>
+      <div class="balloon-tail"></div>
+      <div class="balloon-string"></div>
+    </div>
+    <div class="balloon balloon3" style="top: 20%; right: 8%">
+      <div class="balloon-body"></div>
+      <div class="balloon-tail"></div>
+      <div class="balloon-string"></div>
+    </div>
+    <div
+      class="balloon balloon1"
+      style="bottom: 5%; left: 12%; transform: scale(0.9)"
+    >
+      <div class="balloon-body"></div>
+      <div class="balloon-tail"></div>
+      <div class="balloon-string"></div>
+    </div>
+
+    <!-- Konten Utama Romantis & Ulang Tahun -->
+    <div class="content">
+      <div class="card">
+        <!-- Heading dengan hati berdetak -->
+        <h1>
+          <span class="love-icon">❤️</span>
+          Happy Birthday, mifff!
+          <span class="love-icon">❤️</span>
+        </h1>
+        <div class="birthday-message">
+          🎂✨ Untuk miff yang paling imuttt ✨🎂
+        </div>
+        <p style="margin: 15px 0 5px; font-weight: 600; color: #b13e62">
+          <i class="fas fa-heart" style="color: #ff4d6d"></i>
+          Setiap hari bersamamu adalah hadiah terindah
+          <i class="fas fa-heart" style="color: #ff4d6d"></i>
+        </p>
+        <div class="cute-text">
+          <span>🥳💝</span> Selamat ulang tahun, miff kiblat ti 1c
+          <span>💖🎈</span>
+        </div>
+
+        <!-- Kue Ulang Tahun + Api lilin imut -->
+        <div class="cake-container">
+          <div class="cake">
+            <div class="layer-bottom"></div>
+            <div class="layer-middle"></div>
+            <div class="layer-top">
+              <div class="frosting"></div>
+            </div>
+            <div class="plate"></div>
+            <div class="candle">
+              <div class="flame"></div>
+              <div class="glow"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pesan romantis dengan animasi -->
+        <div class="love-stamp">
+          <div class="stamp">
+            <i class="fas fa-kiss-wink-heart"></i>miff gemes
+          </div>
+          <div class="stamp">
+            <i class="fas fa-birthday-cake"></i> Best Day Ever
+          </div>
+          <div class="stamp"><i class="fas fa-star"></i> My Universe</div>
+        </div>
+
+        <!-- Tombol Kejutan Confetti + Animasi -->
+        <button class="surprise-btn" id="surpriseBtn">
+          <i class="fas fa-gift"></i> KLIK KEJUTAN CINTA
+          <i class="fas fa-heartbeat"></i>
+        </button>
+        <p style="font-size: 0.85rem; margin-top: 10px; color: #e6739f">
+          ✨ Klik tombol di atas untuk merayakan ultah dengan gemerlap ✨
+        </p>
+      </div>
+      <footer>🧸 Untuk seseorang yang paling lucu dan manis 🧸</footer>
+    </div>
+
+    <script>
+      // 1. Membuat floating hearts dengan jumlah imut dan variasi
+      function createFloatingHearts() {
+        const heartsContainer = document.getElementById("heartsBg");
+        const heartCount = 35; // banyak hati imut
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("heart-float");
+          // random pilihan icon hati
+          const heartIcons = [
+            "❤️",
+            "💖",
+            "💗",
+            "💓",
+            "💕",
+            "💞",
+            "🌸",
+            "🎀",
+            "💝",
+            "🧸",
+          ];
+          const randomIcon =
+            heartIcons[Math.floor(Math.random() * heartIcons.length)];
+          heart.innerHTML = randomIcon;
+          // random size (0.8rem sampai 2rem)
+          const size = 0.8 + Math.random() * 1.5;
+          heart.style.fontSize = `${size}rem`;
+          // random posisi kiri (0-100%)
+          heart.style.left = `${Math.random() * 100}%`;
+          // random durasi animasi (6s sampai 15s)
+          const duration = 6 + Math.random() * 12;
+          heart.style.animationDuration = `${duration}s`;
+          // delay random
+          heart.style.animationDelay = `${Math.random() * 10}s`;
+          // opacity lebih halus
+          heart.style.opacity = 0.5 + Math.random() * 0.4;
+          heartsContainer.appendChild(heart);
+        }
+      }
+
+      // 2. Balon tambahan agar lebih rame (tapi tetap rapi)
+      function addExtraBalloons() {
+        // kita sudah punya 4 balon, tambahin 2 lagi di pojok kanan bawah/kiri
+        const positions = [
+          { top: "75%", left: "88%", scale: 0.85 },
+          { top: "12%", left: "88%", scale: 0.7 },
+          { top: "45%", left: "2%", scale: 0.9 },
+        ];
+        const balloonColors = ["balloon1", "balloon2", "balloon3"];
+        positions.forEach((pos, idx) => {
+          const balon = document.createElement("div");
+          balon.classList.add(
+            "balloon",
+            balloonColors[idx % balloonColors.length],
+          );
+          balon.style.position = "fixed";
+          balon.style.top = pos.top;
+          balon.style.left = pos.left;
+          balon.style.transform = `scale(${pos.scale})`;
+          balon.style.pointerEvents = "none";
+          balon.innerHTML = `
+                    <div class="balloon-body"></div>
+                    <div class="balloon-tail"></div>
+                    <div class="balloon-string"></div>
+                `;
+          document.body.appendChild(balon);
+        });
+      }
+
+      // 3. Efek konfeti berwarna-warni + cinta
+      function burstConfettiWithLove() {
+        // Konfeti normal meriah
+        canvasConfetti({
+          particleCount: 150,
+          spread: 85,
+          origin: { y: 0.6 },
+          startVelocity: 18,
+          colors: [
+            "#ffb7c5",
+            "#ff6f91",
+            "#ffb347",
+            "#ffd966",
+            "#f7c4e0",
+            "#ff85a1",
+          ],
+          decay: 0.9,
+          ticks: 200,
+        });
+        // Tambahan konfeti berbentuk hati (menggunakan confetti bentuk custom? cukup dengan efek)
+        setTimeout(() => {
+          canvasConfetti({
+            particleCount: 60,
+            spread: 55,
+            origin: { y: 0.5, x: 0.3 },
+            startVelocity: 25,
+            angle: 60,
+            colors: ["#ff4d6d", "#ff9f4a", "#ffb3ba"],
+          });
+          canvasConfetti({
+            particleCount: 60,
+            spread: 55,
+            origin: { y: 0.5, x: 0.7 },
+            startVelocity: 25,
+            angle: 120,
+            colors: ["#ff85a1", "#f7c4e0", "#ffda7c"],
+          });
+        }, 130);
+        // Ledakan hati di canvas tambahan? Tapi cukup di atas
+        // Juga menambahkan class wiggle pada tombol dan kartu gemoy
+        const btn = document.getElementById("surpriseBtn");
+        btn.classList.add("wiggle");
+        setTimeout(() => btn.classList.remove("wiggle"), 500);
+        const card = document.querySelector(".card");
+        card.style.transform = "scale(1.01)";
+        setTimeout(() => {
+          card.style.transform = "";
+        }, 300);
+
+        // membuat hati kecil jatuh tambahan (DOM sementara)
+        for (let i = 0; i < 30; i++) {
+          const loveHeart = document.createElement("div");
+          loveHeart.innerHTML = ["❤️", "💖", "💗", "🧸", "🎂"][
+            Math.floor(Math.random() * 5)
+          ];
+          loveHeart.style.position = "fixed";
+          loveHeart.style.left = Math.random() * 100 + "%";
+          loveHeart.style.top = "-20px";
+          loveHeart.style.fontSize = 1 + Math.random() * 2 + "rem";
+          loveHeart.style.zIndex = "9999";
+          loveHeart.style.pointerEvents = "none";
+          loveHeart.style.opacity = "0.9";
+          loveHeart.style.animation = `fallLove 1.5s ease forwards`;
+          document.body.appendChild(loveHeart);
+          setTimeout(() => loveHeart.remove(), 1500);
+        }
+      }
+
+      // Tambahkan style untuk animasi jatuh hati sementara
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = `
+            @keyframes fallLove {
+                0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+            }
+        `;
+      document.head.appendChild(styleSheet);
+
+      // 4. Inisiasi saat halaman dimuat dengan kejutan ringan (selamat datang)
+      window.addEventListener("load", () => {
+        createFloatingHearts();
+        addExtraBalloons();
+        // Konfeti sambutan kecil imut untuk menyambut hari spesial
+        canvasConfetti({
+          particleCount: 80,
+          spread: 45,
+          origin: { y: 0.7, x: 0.5 },
+          startVelocity: 12,
+          colors: ["#ff99bb", "#ffcc88", "#ffb3d9"],
+          ticks: 150,
+        });
+        // animasi tambahan untuk lilin yang berkedip dramatis
+        const flame = document.querySelector(".flame");
+        if (flame) {
+          setInterval(() => {
+            flame.style.animation = "none";
+            setTimeout(
+              () => (flame.style.animation = "flicker 0.3s infinite alternate"),
+              5,
+            );
+          }, 2000);
+        }
+        // Ketika kue di klik -> konfeti juga
+        const cakeDiv = document.querySelector(".cake");
+        cakeDiv.addEventListener("click", (e) => {
+          e.stopPropagation();
+          burstConfettiWithLove();
+          // efek suara imut tidak perlu, tapi getar sedikit hehe
+          cakeDiv.style.transform = "scale(0.98)";
+          setTimeout(() => (cakeDiv.style.transform = ""), 200);
+        });
+      });
+
+      // Tombol surprise utama
+      const surpriseBtn = document.getElementById("surpriseBtn");
+      surpriseBtn.addEventListener("click", () => {
+        burstConfettiWithLove();
+        // sedikit pesan ekstra di console (rahasia)
+        console.log(
+          "%c🎂💖 HAPPY BIRTHDAY MY LOVE! You are my everything 💖🎂",
+          "color: #ff4d6d; font-size: 16px; font-weight: bold;",
+        );
+        // efek sweet alert sederhana dengan notifikasi floating
+        const notif = document.createElement("div");
+        notif.innerText = "💘 Kamu adalah hadiah terindah! 💘";
+        notif.style.position = "fixed";
+        notif.style.bottom = "20px";
+        notif.style.left = "50%";
+        notif.style.transform = "translateX(-50%)";
+        notif.style.background = "#ffebf0cc";
+        notif.style.backdropFilter = "blur(10px)";
+        notif.style.padding = "12px 25px";
+        notif.style.borderRadius = "50px";
+        notif.style.fontWeight = "bold";
+        notif.style.color = "#c73c66";
+        notif.style.border = "2px solid #ff9bb5";
+        notif.style.zIndex = "9999";
+        notif.style.fontFamily = "Quicksand, sans-serif";
+        notif.style.fontSize = "1rem";
+        notif.style.boxShadow = "0 8px 20px rgba(0,0,0,0.1)";
+        document.body.appendChild(notif);
+        setTimeout(() => {
+          notif.style.opacity = "0";
+          setTimeout(() => notif.remove(), 600);
+        }, 2200);
+      });
+
+      // Mencegah klik kanan untuk kesan lucu (opsional)
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      // efek hover pada balon (tidak terlalu penting, tapi gemoy)
+      const balloons = document.querySelectorAll(".balloon");
+      balloons.forEach((ball) => {
+        ball.addEventListener("mouseenter", () => {
+          ball.style.animationDuration = "0.6s";
+          ball.style.filter = "brightness(1.05)";
+        });
+        ball.addEventListener("mouseleave", () => {
+          ball.style.animationDuration = "4s";
+          ball.style.filter = "";
+        });
+      });
+
+      // Update tahun/blessing dinamis
+      const year = new Date().getFullYear();
+      const footerMsg = document.querySelector("footer");
+      if (footerMsg) {
+        footerMsg.innerHTML = `🧸 Untuk seseorang yang paling lucu dan manis · Semoga harimu penuh cinta dan tawa 🧸 <br>✨ ${year} · Together forever ✨`;
+      }
+    </script>
+  </body>
+</html>
